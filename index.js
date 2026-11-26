@@ -309,7 +309,11 @@ export class Bridge {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pending.delete(id)
-        reject(new Error(`the browser did not answer "${op}" within ${Math.round(timeoutMs / 1000)}s`))
+        const hint =
+          op === 'screenshot'
+            ? ' — Chrome only hands out pixels while the window is on screen, so bring it to the front and retry'
+            : ''
+        reject(new Error(`the browser did not answer "${op}" within ${Math.round(timeoutMs / 1000)}s${hint}`))
       }, timeoutMs)
       this.pending.set(id, { resolve, reject, timer })
       this.lastRequest = { id, op, sent: false }
@@ -649,7 +653,7 @@ export function apply(context, config = {}) {
       },
     },
     async execute(args = {}) {
-      const shot = await bridge.request('screenshot', { tabId: args.tabId }, 30000)
+      const shot = await bridge.request('screenshot', { tabId: args.tabId }, 12000)
       const data = typeof shot?.image === 'string' ? shot.image : ''
       const base64 = data.startsWith('data:') ? data.slice(data.indexOf(',') + 1) : ''
       // The extension downscales to JPEG, so the declared media type has to come

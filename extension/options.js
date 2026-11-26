@@ -59,3 +59,9 @@ chrome.storage.onChanged.addListener((changes) => {
 })
 paint()
 setInterval(paint, 3000)
+
+// Opening this page with #reload makes Chrome re-read the extension from disk,
+// which is how a changed background.js gets picked up without the toolbar menu.
+if (location.hash === '#reload') {
+  chrome.runtime.reload()
+}

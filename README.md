@@ -19,6 +19,34 @@ remote-debugging port is opened.
 | `browser_navigate` | Open a URL in a tab, keeping the user's cookies and logins |
 | `browser_screenshot` | Capture the tab viewport as a downscaled image (no desktop capture, no permission dialog) |
 
+## What it looks like
+
+![A DeepSeek Harness tab captured through the extension](docs/demo-screenshot.jpg)
+
+That frame came back from `browser_screenshot` on a normal Chrome tab: no desktop capture, no screen
+sharing prompt, just `chrome.tabs.captureVisibleTab` in the extension, downscaled to 1600 px wide
+before it crosses the WebSocket.
+
+Reading is the cheap part, though. One `browser_query` on a video site returns structured rows instead
+of pixels:
+
+```json
+{ "count": 8, "rows": [
+  { "text": "一个“国误奇观”的故事", "tag": "h3", "href": "https://www.bilibili.com/video/BV1h9n96tEna",
+    "rect": { "x": 96, "y": 412, "width": 380, "height": 48 }, "visible": true }
+] }
+```
+
+So the model can click that exact element by selector instead of estimating a coordinate:
+
+```json
+browser_click { "text": "一个“国误奇观”的故事" }
+→ { "clicked": true, "target": { "tag": "a", "href": "https://www.bilibili.com/video/BV1h9n96tEna?…" } }
+```
+
+Capturing needs the Chrome window to be visible (a minimized or fully covered window makes
+`captureVisibleTab` wait); reading, querying, clicking and typing work regardless.
+
 ## Install
 
 ```sh

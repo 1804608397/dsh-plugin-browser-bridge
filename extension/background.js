@@ -198,7 +198,9 @@ const OPS = {
     // is not the visible one, so focus the window, activate the tab, and never
     // wait forever.
     try {
-      await chrome.windows.update(tab.windowId, { focused: true })
+      // A minimized or fully occluded window makes captureVisibleTab hang
+      // forever, so restore and focus it before asking for a frame.
+      await chrome.windows.update(tab.windowId, { focused: true, state: 'normal' })
     } catch {}
     try {
       await chrome.tabs.update(tab.id, { active: true })
@@ -215,13 +217,18 @@ const OPS = {
     // A full-screen PNG data URL runs to several megabytes; a service worker's
     // WebSocket send silently fails on payloads that large, so downscale first.
     const shrunk = await shrinkDataUrl(image, 1600, 0.7)
-    const dimensions = await runInTab(
-      tab,
-      function pageSize() {
-        return { width: window.innerWidth, height: window.innerHeight, url: location.href, title: document.title }
-      },
-      {},
-    )
+    // The page probe is cosmetic: never let a slow or blocked script injection
+    // hold the reply hostage.
+    const dimensions = await Promise.race([
+      runInTab(
+        tab,
+        function pageSize() {
+          return { width: window.innerWidth, height: window.innerHeight, url: location.href, title: document.title }
+        },
+        {},
+      ).catch(() => ({})),
+      new Promise((resolve) => setTimeout(() => resolve({}), 2500)),
+    ])
     return { image: shrunk, ...dimensions }
   },
 }

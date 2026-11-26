@@ -652,6 +652,11 @@ export function apply(context, config = {}) {
       const shot = await bridge.request('screenshot', { tabId: args.tabId }, 30000)
       const data = typeof shot?.image === 'string' ? shot.image : ''
       const base64 = data.startsWith('data:') ? data.slice(data.indexOf(',') + 1) : ''
+      // The extension downscales to JPEG, so the declared media type has to come
+      // from the data URL rather than being assumed: the store verifies the
+      // bytes and rejects a mismatch.
+      const declared = /^data:(image\/(?:png|jpeg|webp|gif));base64,/.exec(data)?.[1] ?? 'image/png'
+      const extension = declared === 'image/jpeg' ? 'jpg' : declared.slice('image/'.length)
       let attachment
       if (base64) {
         try {
@@ -665,8 +670,8 @@ export function apply(context, config = {}) {
           if (typeof save === 'function') {
             attachment = await save.call(service, {
               data: Buffer.from(base64, 'base64'),
-              mediaType: 'image/png',
-              name: `chrome-tab-${Date.now()}.png`,
+              mediaType: declared,
+              name: `chrome-tab-${Date.now()}.${extension}`,
             })
           }
         } catch (error) {

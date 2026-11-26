@@ -367,7 +367,7 @@ function statusRender(_args, value) {
   return [{ type: 'text', text: lines.join('\n') }]
 }
 
-export const inject = ['tools']
+export const inject = ['tools', 'attachments']
 
 export const name = 'browser-bridge'
 
@@ -655,9 +655,15 @@ export function apply(context, config = {}) {
       let attachment
       if (base64) {
         try {
-          const save = context.attachments?.saveImage
+          // `inject` is resolved once at load time, so a host that was already
+          // running when this plugin gained the dependency still needs the
+          // optional lookup to reach the service.
+          const service =
+            context.attachments ??
+            (typeof context.get === 'function' ? context.get('attachments') : undefined)
+          const save = service?.saveImage
           if (typeof save === 'function') {
-            attachment = await save.call(context.attachments, {
+            attachment = await save.call(service, {
               data: Buffer.from(base64, 'base64'),
               mediaType: 'image/png',
               name: `chrome-tab-${Date.now()}.png`,
@@ -667,19 +673,32 @@ export function apply(context, config = {}) {
           console.error('[browser-bridge] could not store the screenshot:', error)
         }
       }
-      return {
-        url: shot?.url ?? '',
-        title: shot?.title ?? '',
-        width: shot?.width ?? 0,
-        height: shot?.height ?? 0,
+      // Tool results must survive a JSON round trip unchanged, so never leave an
+      // `undefined` property behind: it disappears on stringify and the gateway
+      // rejects the value as "not lossless JSON".
+      const value = {
+        url: String(shot?.url ?? ''),
+        title: String(shot?.title ?? ''),
+        width: Number(shot?.width ?? 0),
+        height: Number(shot?.height ?? 0),
         image: attachment ? 'stored' : data ? 'unstored' : '',
-        attachment,
         note: attachment
           ? 'captured from the tab viewport through the extension'
           : data
             ? 'captured, but no attachment service was available to store it'
             : 'the extension did not return an image',
       }
+      if (attachment) {
+        value.attachment = {
+          attachmentId: String(attachment.attachmentId),
+          mediaType: String(attachment.mediaType),
+          bytes: Number(attachment.bytes ?? 0),
+          width: Number(attachment.width ?? 0),
+          height: Number(attachment.height ?? 0),
+          ...(attachment.name ? { name: String(attachment.name) } : {}),
+        }
+      }
+      return value
     },
   })
 }

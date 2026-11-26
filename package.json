@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-browser-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "type": "module",
   "description": "Chrome page bridge for DeepSeek Harness: read DOM elements and drive tabs through a paired browser extension, no screen capture required.",

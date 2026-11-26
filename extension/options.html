@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>DSH Browser Bridge</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font: 14px/1.6 system-ui, sans-serif; margin: 0; padding: 32px; max-width: 720px; }
+      h1 { font-size: 20px; margin: 0 0 4px; }
+      p.lead { margin: 0 0 24px; opacity: 0.75; }
+      label { display: block; font-weight: 600; margin: 18px 0 6px; }
+      input { width: 100%; box-sizing: border-box; padding: 8px 10px; font: inherit; border: 1px solid #8888; border-radius: 8px; background: transparent; color: inherit; }
+      .row { display: flex; gap: 12px; align-items: center; margin-top: 18px; }
+      button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid #8888; background: #2563eb; color: #fff; cursor: pointer; }
+      button.secondary { background: transparent; color: inherit; }
+      #status { margin-top: 20px; padding: 12px 14px; border-radius: 10px; background: #8881; white-space: pre-wrap; }
+      code { font-family: ui-monospace, monospace; background: #8881; padding: 1px 5px; border-radius: 5px; }
+      .hint { opacity: 0.7; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <h1>DSH Browser Bridge</h1>
+    <p class="lead">让 DeepSeek Harness 直接读页面元素、点按钮、填输入框，而不是靠截图猜坐标。</p>
+
+    <label for="token">配对令牌（pairing token）</label>
+    <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="在 DeepSeek Harness 里运行 browser_status 获取" />
+    <p class="hint">来源：<code>~/.config/dsh-browser-bridge/token</code></p>
+
+    <label for="port">本机端口</label>
+    <input id="port" type="number" min="1" max="65535" value="17871" />
+
+    <div class="row">
+      <button id="save">保存并重连</button>
+      <button id="check" class="secondary">测试连接</button>
+    </div>
+
+    <div id="status">加载中…</div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Browser Bridge",
+    "description": "Read a Chrome page's elements, click, and fill forms through a paired extension — no screenshot guessing.",
+    "detail": "docs/DETAIL.md"
+  }
+}

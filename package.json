@@ -1,0 +1,46 @@
+{
+  "name": "dsh-plugin-browser-bridge",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Chrome page bridge for DeepSeek Harness: read DOM elements and drive tabs through a paired browser extension, no screen capture required.",
+  "license": "MIT",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "chrome-extension",
+    "browser-automation",
+    "dom"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "extension",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1804608397/dsh-plugin-browser-bridge.git"
+  },
+  "homepage": "https://github.com/1804608397/dsh-plugin-browser-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/1804608397/dsh-plugin-browser-bridge/issues"
+  },
+  "author": "1804608397"
+}

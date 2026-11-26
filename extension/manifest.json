@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "DSH Browser Bridge",
+  "version": "0.1.0",
+  "description": "Pairs this Chrome with DeepSeek Harness so the agent can read page elements and drive tabs instead of taking screenshots.",
+  "permissions": ["tabs", "scripting", "storage", "alarms"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "options_page": "options.html",
+  "action": { "default_title": "DSH Browser Bridge" }
+}

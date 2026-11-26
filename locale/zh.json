@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "浏览器桥 (Browser Bridge)",
+    "description": "通过配对的 Chrome 扩展直接读取页面元素、点击与填写表单，无需截图猜坐标。",
+    "detail": "docs/DETAIL.md"
+  }
+}

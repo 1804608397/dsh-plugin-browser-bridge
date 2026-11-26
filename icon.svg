@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" role="img" aria-label="Browser Bridge">
+  <circle cx="18" cy="18" r="15.5" fill="#1f2937"/>
+  <circle cx="18" cy="18" r="15.5" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M18 7.5a10.5 10.5 0 0 1 9.1 5.25H18z" fill="#ef4444"/>
+  <path d="M8.9 12.75h9.1l-4.55 7.9a10.5 10.5 0 0 1-4.55-7.9z" fill="#22c55e"/>
+  <path d="M27.1 12.75a10.5 10.5 0 0 1-4.55 7.9l-4.55-7.9z" fill="#3b82f6"/>
+  <circle cx="18" cy="18" r="4.2" fill="#e5e7eb"/>
+  <circle cx="18" cy="18" r="1.8" fill="#111827"/>
+</svg>
